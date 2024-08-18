@@ -1,1 +1,1 @@
-blue commit 1
+blue commit 2
