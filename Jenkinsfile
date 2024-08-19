@@ -27,7 +27,7 @@ pipeline {
         }
         stage('Update Black Branch with New Commit') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'your-credentials-id', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
+                withCredentials([usernamePassword(credentialsId: 'fb4df0b3-3a24-4e12-b44a-a5e5b2633025', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
                     sh '''
                     git checkout black
                     git config user.name "MRizk01"
