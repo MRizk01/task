@@ -1,3 +1,8 @@
 4f73281 Hello
+<<<<<<< Updated upstream
+hello again
+I need a cup of coffee
+=======
+>>>>>>> Stashed changes
 hello again
 I need a cup of coffee
