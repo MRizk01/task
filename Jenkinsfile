@@ -4,12 +4,12 @@ pipeline {
     stages {
         stage('Clone Repository') {
             steps {
-                git url: 'https://github.com/MRizk01/task.git', branch: 'master'
+                git 'https://github.com/MRizk01/task.git'
             }
         }
         stage('List Branches') {
             steps {
-                sh 'git branch -a > branches'
+                sh 'git branch -a'
             }
         }
         stage('Make File Executable') {
@@ -21,7 +21,7 @@ pipeline {
             steps {
                 sh '''
                 git checkout red
-                git log --oneline | grep "Hello" > hello_commit.txt
+                git log --oneline | grep Hello > hello_commit.txt
                 '''
             }
         }
@@ -29,8 +29,10 @@ pipeline {
             steps {
                 sh '''
                 git checkout black
-                echo "hello again" >> hello_commit.txt
-                echo "I need a cup of coffee" >> hello_commit.txt
+                git config user.name "MRizk01"
+                git config user.email "mrizkrageh@gmail.com"
+                echo hello again >> hello_commit.txt
+                echo I need a cup of coffee >> hello_commit.txt
                 git add hello_commit.txt
                 git commit -m "Update hello_commit.txt"
                 git push origin black
@@ -40,11 +42,9 @@ pipeline {
         stage('Create Pull Request') {
             steps {
                 sh '''
-                git checkout master
                 gh pr create --base master --head black --title "It’s Black" --body "Merging Black branch into master"
                 '''
             }
         }
     }
 }
-
