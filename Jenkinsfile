@@ -36,7 +36,14 @@ pipeline {
                     # Checkout black branch and apply the stashed changes
                     git checkout black
                     git stash pop || true
-                    
+
+                    # Resolve conflicts if any
+                    if git diff --name-only --diff-filter=U | grep hello_commit.txt; then
+                        echo "Resolving merge conflict in hello_commit.txt"
+                        git add hello_commit.txt
+                        git commit -m "Resolve conflict in hello_commit.txt"
+                    fi
+
                     # Add the changes to the black branch
                     echo hello again >> hello_commit.txt
                     echo I need a cup of coffee >> hello_commit.txt
@@ -51,7 +58,7 @@ pipeline {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'fb4df0b3-3a24-4e12-b44a-a5e5b2633025', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
                     sh '''
-                    gh auth login --with-token <<< $GIT_PASSWORD
+                    echo $GIT_PASSWORD | gh auth login --with-token
                     gh pr create --base master --head black --title "It’s Black" --body "Merging Black branch into master"
                     '''
                 }
