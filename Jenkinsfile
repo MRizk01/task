@@ -27,23 +27,28 @@ pipeline {
         }
         stage('Update Black Branch with New Commit') {
             steps {
-                sh '''
-                git checkout black
-                git config user.name "MRizk01"
-                git config user.email "mrizkrageh@gmail.com"
-                echo hello again >> hello_commit.txt
-                echo I need a cup of coffee >> hello_commit.txt
-                git add hello_commit.txt
-                git commit -m "Update hello_commit.txt"
-                git push origin black
-                '''
+                withCredentials([usernamePassword(credentialsId: 'your-credentials-id', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
+                    sh '''
+                    git checkout black
+                    git config user.name "MRizk01"
+                    git config user.email "mrizkrageh@gmail.com"
+                    echo hello again >> hello_commit.txt
+                    echo I need a cup of coffee >> hello_commit.txt
+                    git add hello_commit.txt
+                    git commit -m "Update hello_commit.txt"
+                    git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/MRizk01/task.git black
+                    '''
+                }
             }
         }
         stage('Create Pull Request') {
             steps {
-                sh '''
-                gh pr create --base master --head black --title "It’s Black" --body "Merging Black branch into master"
-                '''
+                withCredentials([usernamePassword(credentialsId: 'fb4df0b3-3a24-4e12-b44a-a5e5b2633025', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
+                    sh '''
+                    gh auth login --with-token <<< $GIT_PASSWORD
+                    gh pr create --base master --head black --title "It’s Black" --body "Merging Black branch into master"
+                    '''
+                }
             }
         }
     }
