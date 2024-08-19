@@ -9,7 +9,7 @@ pipeline {
         }
         stage('List Branches') {
             steps {
-                sh 'git branch -a'
+                sh 'git branch -a > branches'
             }
         }
         stage('Make File Executable') {
