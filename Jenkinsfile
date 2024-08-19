@@ -9,7 +9,7 @@ pipeline {
         }
         stage('List Branches') {
             steps {
-                sh 'git branch -a > branches'
+                sh 'git branch -a'
             }
         }
         stage('Make File Executable') {
@@ -29,9 +29,15 @@ pipeline {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'fb4df0b3-3a24-4e12-b44a-a5e5b2633025', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
                     sh '''
+                    # Stash or remove the untracked file before switching branches
+                    git add hello_commit.txt
+                    git stash
+
+                    # Checkout black branch and apply the stashed changes
                     git checkout black
-                    git config user.name "MRizk01"
-                    git config user.email "mrizkrageh@gmail.com"
+                    git stash pop || true
+                    
+                    # Add the changes to the black branch
                     echo hello again >> hello_commit.txt
                     echo I need a cup of coffee >> hello_commit.txt
                     git add hello_commit.txt
